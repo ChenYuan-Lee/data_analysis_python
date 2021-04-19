@@ -17,3 +17,13 @@ def pull_from_snowflake(query: str) -> DataFrame:
     with create_engine(snowflake_url).connect() as connection:
         query_result = read_sql(query, con=connection)
     return query_result
+
+
+def save_as_csv(df: DataFrame, file_name: str) -> None:
+    assert file_name[-4:] == ".csv"
+    df.to_csv(f"csv_files/{file_name}", index_label=False)
+
+
+def retrieve_and_save_data(query: str, file_name: str) -> None:
+    df = pull_from_snowflake(query)
+    save_as_csv(df=df, file_name=file_name)
